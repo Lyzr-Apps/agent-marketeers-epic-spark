@@ -1,0 +1,63 @@
+{
+  "agent_name": "SEO Analyst Agent",
+  "agent_id": "698b3bf79b3205af189627aa",
+  "test_message": "Analyze SEO opportunities for a summer product launch of a productivity app called 'FlowState' targeting young professionals aged 25-35 who work remotely. Provide keyword recommendations, meta descriptions, and optimization checklist.",
+  "expected_purpose": "SEO strategist providing keyword recommendations, meta descriptions, and optimization guidance",
+  "timestamp": "2026-02-10T14:12:42.941712",
+  "is_valid_json": true,
+  "validation_errors": [],
+  "actual_response": {
+    "status": "success",
+    "result": {
+      "summary": "Comprehensive SEO analysis for the summer product launch of the 'FlowState' app, focusing on young professionals working remotely.",
+      "data": {
+        "primary_keywords": [
+          "productivity app",
+          "remote work productivity",
+          "task management app",
+          "FlowState app",
+          "work-from-home tools"
+        ],
+        "secondary_keywords": [
+          "best productivity app for remote work",
+          "digital productivity solutions",
+          "time management app",
+          "workflow optimization",
+          "young professionals productivity"
+        ],
+        "long_tail_keywords": [
+          "increase productivity while working from home",
+          "best features of FlowState productivity app",
+          "how to use productivity tools effectively",
+          "productivity tips for remote workers",
+          "FlowState app review"
+        ],
+        "meta_descriptions": [
+          "Boost your productivity with FlowState, the ultimate app for remote workers. Enhance your workflow and achieve your goals this summer.",
+          "Unlock your full potential while working remotely! Discover the features of FlowState, your go-to productivity app.",
+          "Take control of your work-from-home routine with FlowState. Get organized and thrive with our productivity app tailored for young professionals."
+        ],
+        "optimization_checklist": [
+          "Optimize title tags and meta descriptions with primary keywords.",
+          "Include primary and secondary keywords naturally throughout the content.",
+          "Use header tags (H1, H2, H3) to structure the content clearly.",
+          "Incorporate long-tail keywords within blog posts or landing pages.",
+          "Add images with alt tags containing keywords.",
+          "Ensure mobile optimization for the app's landing page.",
+          "Enhance page load speed for a better user experience.",
+          "Build backlinks from reputable productivity and tech blogs.",
+          "Encourage user reviews and testimonials for social proof.",
+          "Monitor performance using analytics tools."
+        ],
+        "content_structure": "Introduction to FlowState, Key Features, Benefits for Remote Workers, User Testimonials, Tips for Enhancing Productivity, Call to Action.",
+        "keyword_density_guidance": "Maintain a keyword density of 1-2% for primary keywords and 0.5-1% for secondary and long-tail keywords.",
+        "internal_linking_strategy": "Link to related blog posts about productivity strategies, user guides for the app, and customer testimonials to improve site structure and SEO."
+      }
+    },
+    "metadata": {
+      "agent_name": "SEO Analyst Agent",
+      "timestamp": "2023-10-04T12:00:00Z"
+    }
+  },
+  "raw_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"summary\": \"Comprehensive SEO analysis for the summer product launch of the 'FlowState' app, focusing on young professionals working remotely.\",\n    \"data\": {\n      \"primary_keywords\": [\"productivity app\", \"remote work productivity\", \"task management app\", \"FlowState app\", \"work-from-home tools\"],\n      \"secondary_keywords\": [\"best productivity app for remote work\", \"digital productivity solutions\", \"time management app\", \"workflow optimization\", \"young professionals productivity\"],\n      \"long_tail_keywords\": [\"increase productivity while working from home\", \"best features of FlowState productivity app\", \"how to use productivity tools effectively\", \"productivity tips for remote workers\", \"FlowState app review\"],\n      \"meta_descriptions\": [\n        \"Boost your productivity with FlowState, the ultimate app for remote workers. Enhance your workflow and achieve your goals this summer.\",\n        \"Unlock your full potential while working remotely! Discover the features of FlowState, your go-to productivity app.\",\n        \"Take control of your work-from-home routine with FlowState. Get organized and thrive with our productivity app tailored for young professionals.\"\n      ],\n      \"optimization_checklist\": [\n        \"Optimize title tags and meta descriptions with primary keywords.\",\n        \"Include primary and secondary keywords naturally throughout the content.\",\n        \"Use header tags (H1, H2, H3) to structure the content clearly.\",\n        \"Incorporate long-tail keywords within blog posts or landing pages.\",\n        \"Add images with alt tags containing keywords.\",\n        \"Ensure mobile optimization for the app's landing page.\",\n        \"Enhance page load speed for a better user experience.\",\n        \"Build backlinks from reputable productivity and tech blogs.\",\n        \"Encourage user reviews and testimonials for social proof.\",\n        \"Monitor performance using analytics tools.\"\n      ],\n      \"content_structure\": \"Introduction to FlowState, Key Features, Benefits for Remote Workers, User Testimonials, Tips for Enhancing Productivity, Call to Action.\",\n      \"keyword_density_guidance\": \"Maintain a keyword density of 1-2% for primary keywords and 0.5-1% for secondary and long-tail keywords.\",\n      \"internal_linking_strategy\": \"Link to related blog posts about productivity strategies, user guides for the app, and customer testimonials to improve site structure and SEO.\"\n    }\n  },\n  \"metadata\": {\n    \"agent_name\": \"SEO Analyst Agent\",\n    \"timestamp\": \"2023-10-04T12:00:00Z\"\n  }\n}"
+}

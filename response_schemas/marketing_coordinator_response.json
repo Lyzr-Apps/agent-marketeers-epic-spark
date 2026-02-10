@@ -1,0 +1,43 @@
+{
+  "agent_name": "Marketing Coordinator",
+  "agent_id": "698b3c45f5a3c496d902339d",
+  "agent_purpose": "Manager agent that orchestrates Content Writer, SEO Analyst, and Graphics Generator",
+  "description": "Marketing Coordinator is a MANAGER agent that orchestrates Content Writer, SEO Analyst, and Graphics Generator sub-agents. It aggregates all sub-agent outputs into a unified campaign package. Response follows {status, result: {summary, data: {campaign_overview, written_content, seo_recommendations, visual_assets, consistency_notes, revision_flags}}, metadata} format. All data fields are strings containing consolidated deliverables.",
+  "response_schema": {
+    "status": "string (success|error)",
+    "result": {
+      "response": "string",
+      "action_taken": "string (optional)",
+      "data": "object (optional, any structured data)",
+      "suggestions": [
+        "string (optional)"
+      ]
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string (ISO)"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "response": "I've completed the task you requested",
+      "action_taken": "Processed the input and generated output",
+      "data": {
+        "key": "value"
+      },
+      "suggestions": [
+        "You might also want to try X"
+      ]
+    },
+    "metadata": {
+      "agent_name": "Marketing Coordinator",
+      "timestamp": "2025-01-15T10:30:00Z"
+    }
+  },
+  "is_actual_tested": false,
+  "test_timestamp": null,
+  "test_message_used": "Hello, provide a sample response",
+  "raw_test_response": "{\n  \"status\": \"success\",\n  \"result\": {\n    \"summary\": \"Sample campaign package for a fictitious eco-friendly water bottle brand, demonstrating coordinated marketing deliverables.\",\n    \"data\": {\n      \"campaign_overview\": \"This sample campaign promotes a new line of eco-friendly water bottles to environmentally conscious millennials. The approach integrates SEO-driven copy, engaging web content, and aligned visual assets, all unified under a positive, sustainability-focused brand tone. Deliverables include website homepage content, social media copy, and a hero image for the landing page.\",\n      \"written_content\": \"Introducing GreenSip\u2014the water bottle designed with both planet and people in mind. Crafted from 100% recycled materials, GreenSip helps you stay hydrated while reducing your carbon footprint. Join thousands of eco-conscious millennials making a real difference. #SipSustainably\n\nSocial copy: \u2018Refresh your lifestyle and the planet. Discover GreenSip: the eco-friendly way to hydrate. \ud83c\udf0e\ud83d\udca7 #EcoChic #GreenSip\u2019\",\n      \"seo_recommendations\": \"Primary keyword: eco-friendly water bottle\nSecondary keywords: sustainable hydration, recycled water bottles, BPA-free, reusable.\nOn-page optimization suggestions: Position the primary keyword in headline and first paragraph; use secondary keywords in subheaders; include alt text with \u2018eco-friendly water bottle\u2019 for primary images; ensure meta title and descriptions remain under 60 and 160 characters respectively.\",\n      \"visual_assets\": \"Hero image: A vibrant photo-realistic rendering of a stylish reusable water bottle in a natural outdoor setting with greenery, sunlight, and water droplets highlighting freshness. Social media asset: Minimalist infographic showing 5 benefits of switching to sustainable water bottles, using brand colors (green, blue, white).\",\n      \"consistency_notes\": \"Content, visuals, and SEO are aligned around the brand\u2019s eco-friendly, positive message. Brand tone remains consistent, visuals reinforce written themes, and primary keywords are integrated across copy and image descriptors.\",\n      \"revision_flags\": \"No inconsistencies detected. Recommend future A/B testing for social copy performance.\"\n    }\n  },\n  \"metadata\": {\n    \"agent_name\": \"Marketing Coordinator\",\n    \"timestamp\": \"2024-06-12T15:30:00Z\"\n  }\n}",
+  "test_error": "Response not valid JSON: Invalid control character at: line 7 column 305 (char 902)"
+}

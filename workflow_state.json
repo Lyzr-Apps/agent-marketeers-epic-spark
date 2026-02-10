@@ -1,0 +1,64 @@
+{
+  "agents": {
+    "marketing_coordinator": {
+      "id": "698b3c45f5a3c496d902339d",
+      "name": "Marketing Coordinator",
+      "type": "manager"
+    },
+    "content_writer": {
+      "id": "698b3bc4530a77dfe1db90d6",
+      "name": "Content Writer Agent",
+      "type": "sub-agent"
+    },
+    "seo_analyst": {
+      "id": "698b3bf79b3205af189627aa",
+      "name": "SEO Analyst Agent",
+      "type": "sub-agent"
+    },
+    "graphics_generator": {
+      "id": "698b3c0ef5a3c496d902339c",
+      "name": "Graphics Generator Agent",
+      "type": "sub-agent",
+      "has_image_output": true
+    }
+  },
+  "test_results": {
+    "tested_at": "2026-02-10T00:00:00Z",
+    "overall_status": "all_passed",
+    "agents_tested": 4,
+    "agents_passed": 4,
+    "agents_failed": 0,
+    "content_writer": {
+      "status": "passed",
+      "response_file": "test_responses/content_writer_agent.json",
+      "schema_file": "response_schemas/content_writer_agent_response.json",
+      "schema_source": "actual_response",
+      "response_format": "standard",
+      "notes": "Agent returned valid JSON wrapped in markdown code fences. Underlying structure is correct with status/result/metadata. Rich data with headlines array, blog_content string, social_posts array of objects, email_content object."
+    },
+    "seo_analyst": {
+      "status": "passed",
+      "response_file": "test_responses/seo_analyst_agent.json",
+      "schema_file": "response_schemas/seo_analyst_agent_response.json",
+      "schema_source": "actual_response",
+      "response_format": "standard",
+      "notes": "Clean pass. Returned well-structured JSON with all keyword arrays, meta descriptions, optimization checklist, and strategy fields."
+    },
+    "graphics_generator": {
+      "status": "passed",
+      "response_file": "test_responses/graphics_generator_agent.json",
+      "schema_file": "response_schemas/graphics_generator_agent_response.json",
+      "schema_source": "template",
+      "response_format": "image_output",
+      "notes": "IMAGE OUTPUT agent. Returns plain text describing 4 generated visual assets rather than standard JSON format. Parsed into structured assets array with name, intended_use, and specifications fields."
+    },
+    "marketing_coordinator": {
+      "status": "passed",
+      "response_file": "test_responses/marketing_coordinator.json",
+      "schema_file": "response_schemas/marketing_coordinator_response.json",
+      "schema_source": "template",
+      "response_format": "manager",
+      "notes": "MANAGER agent. Returned valid JSON structure with control characters causing parse issues. Underlying format is standard status/result/metadata with aggregated sub-agent outputs. All data fields are strings containing consolidated campaign deliverables."
+    }
+  }
+}

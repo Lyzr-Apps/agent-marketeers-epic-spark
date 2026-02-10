@@ -1,0 +1,43 @@
+{
+  "agent_name": "Graphics Generator Agent",
+  "agent_id": "698b3c0ef5a3c496d902339c",
+  "agent_purpose": "Visual designer creating marketing graphics and banners",
+  "description": "Graphics Generator Agent is an IMAGE OUTPUT agent that creates marketing visuals. It does NOT use the standard {status, result, metadata} format. Instead it returns plain text descriptions of generated visual assets with their intended uses and specifications. The response includes raw_text and a parsed assets array.",
+  "response_schema": {
+    "status": "string (success|error)",
+    "result": {
+      "response": "string",
+      "action_taken": "string (optional)",
+      "data": "object (optional, any structured data)",
+      "suggestions": [
+        "string (optional)"
+      ]
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string (ISO)"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "response": "I've completed the task you requested",
+      "action_taken": "Processed the input and generated output",
+      "data": {
+        "key": "value"
+      },
+      "suggestions": [
+        "You might also want to try X"
+      ]
+    },
+    "metadata": {
+      "agent_name": "Graphics Generator Agent",
+      "timestamp": "2025-01-15T10:30:00Z"
+    }
+  },
+  "is_actual_tested": false,
+  "test_timestamp": null,
+  "test_message_used": "Hello, provide a sample response",
+  "raw_test_response": "Certainly! Here\u2019s a sample response demonstrating how I, as a creative visual designer, would respond to a campaign brief to create marketing graphics:\n\n---\n\nCampaign Brief Overview:\n- Theme: \u201cSummer Splash Sale\u201d\n- Brand: BrightWaves Apparel (youthful, energetic, modern)\n- Target Audience: Trendy, fashion-conscious individuals aged 16-30\n- Objective: Drive social media engagement and highlight limited-time discounts\n\nStep 1: Analysis  \nThe campaign emphasizes summer, vibrancy, and excitement. The brand tone is lively and bold, appealing to younger audiences who value style and social presence.\n\nStep 2: Generated Visual Assets\n\n1. Instagram Story Banner  \n- Intended Use: IG Stories (1080x1920 px)  \n- Description:  \n  - Background: Sunburst gradient in orange, yellow, and turquoise  \n  - Foreground: Energetic young people jumping or posing in BrightWaves apparel  \n  - Overlay: \u201c\ud83d\udd25 SUMMER SPLASH SALE! \ud83d\udd25\u201d in bold, playful sans-serif font (custom shadow)  \n  - CTA Button: \u201cSwipe Up for 30% Off\u201d (vivid turquoise on white)\n\n2. Facebook Cover Photo  \n- Intended Use: Facebook Page Cover (820x312 px)  \n- Description:  \n  - Layout: Left-aligned logo, right-aligned promo text  \n  - Elements: Palm leaves watermark, product images layered as polaroids  \n  - Text: \u201cLimited Time: 30% Off All Summer Collection.\u201d Main font: Montserrat Extra Bold, subtext in cursive accent  \n  - Colors: Dominantly blue and yellow, hint of coral overlays\n\n3. Website Promo Banner  \n- Intended Use: Homepage promotion (1920x480 px)  \n- Description:  \n  - Visual: Water splash effect background, with apparel models mid-motion  \n  - Text overlay: \u201cCatch the Wave\u2014Save Big This Week Only!\u201d  \n  - Button: Gradient button \u201cShop Now\u201d  \n  - Consistency: Typography and color scheme matches brand guidelines\n\n4. Pinterest Pin  \n- Intended Use: Pinterest (1000x1500 px)  \n- Description:  \n  - Visual: Close-up product shot (sunglasses, swimwear), layered with tropical graphics  \n  - Text: Summer Splash Sale in hand-lettered style  \n  - Aesthetic: High-contrast, bold palette for maximum scroll-stopping effect\n\nStep 3: Visual Consistency  \nAll images use BrightWaves\u2019 signature blue, yellow, and coral palette, Montserrat/hand-lettered combination fonts, and dynamic youth-centered imagery. Each asset is sized and formatted for its platform.\n\nWould you like me to generate sample images or further customize any of these assets for your campaign?",
+  "test_error": "Response not valid JSON: Expecting value: line 1 column 1 (char 0)"
+}

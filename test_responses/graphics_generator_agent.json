@@ -1,0 +1,40 @@
+{
+  "agent_name": "Graphics Generator Agent",
+  "agent_id": "698b3c0ef5a3c496d902339c",
+  "test_input": "Create a vibrant social media banner for a summer product launch of a productivity app called 'FlowState'. Use bold colors, modern design elements, and include the tagline 'Flow Into Productivity'. Target audience: young professionals.",
+  "response": {
+    "raw_text": "Here are four visually compelling assets for the FlowState summer product launch campaign, crafted with bold colors and modern design elements to engage young professionals. Each design maintains visual consistency and leverages strong branding for maximum impact:\n\n1. FlowState Vibrant Summer Social Media Banner\n- Intended Use: Wide-format banner for Facebook, Twitter, or web header.\n- Specifications: Features bright summery colors (electric blue, yellow, pink), geometric modern elements, and subtle productivity icons. The app name and tagline \"Flow Into Productivity\" are prominently displayed.\n- View/Download: FlowState Social Media Banner\n\n2. FlowState Instagram Story Summer Promo\n- Intended Use: Instagram Story or vertical mobile format for promotions and ads.\n- Specifications: Bold gradient background and playful geometric overlays. Showcases the FlowState app on a mobile screen with the tagline, optimized for vertical viewing.\n- View/Download: FlowState Instagram Story Promo\n\n3. FlowState Summer Social Media Post - Square\n- Intended Use: Square post for Instagram, Facebook, or LinkedIn feeds.\n- Specifications: Clean, minimal design with a fun summer palette. Central placement of the app name and tagline, accented by modern icons (sun, notepad, clock).\n- View/Download: FlowState Square Social Media Post\n\n4. FlowState Summer LinkedIn Banner\n- Intended Use: LinkedIn banner image for business profile or campaign page.\n- Specifications: Bold, professional color gradients in blues and oranges, abstract wave geometric shapes, and subtle productivity icons, all geared toward young professionals.\n- View/Download: FlowState LinkedIn Banner\n\nLet me know if you need any further edits, additional formats, or downloadable files!",
+    "assets": [
+      {
+        "name": "FlowState Vibrant Summer Social Media Banner",
+        "intended_use": "Wide-format banner for Facebook, Twitter, or web header",
+        "specifications": "Bright summery colors (electric blue, yellow, pink), geometric modern elements, subtle productivity icons, app name and tagline prominently displayed"
+      },
+      {
+        "name": "FlowState Instagram Story Summer Promo",
+        "intended_use": "Instagram Story or vertical mobile format for promotions and ads",
+        "specifications": "Bold gradient background, playful geometric overlays, FlowState app on mobile screen with tagline, optimized for vertical viewing"
+      },
+      {
+        "name": "FlowState Summer Social Media Post - Square",
+        "intended_use": "Square post for Instagram, Facebook, or LinkedIn feeds",
+        "specifications": "Clean, minimal design with fun summer palette, central app name and tagline, modern icons (sun, notepad, clock)"
+      },
+      {
+        "name": "FlowState Summer LinkedIn Banner",
+        "intended_use": "LinkedIn banner image for business profile or campaign page",
+        "specifications": "Professional color gradients in blues and oranges, abstract wave geometric shapes, subtle productivity icons"
+      }
+    ]
+  },
+  "field_types": {
+    "raw_text": "string",
+    "assets": "array",
+    "assets[].name": "string",
+    "assets[].intended_use": "string",
+    "assets[].specifications": "string"
+  },
+  "status": "passed",
+  "notes": "IMAGE OUTPUT agent. Does NOT use the standard {status, result, metadata} format. Returns plain text describing generated visual assets. The response is a text description of 4 generated graphics with their intended uses and specifications. This agent uses image_output_config so responses contain image descriptions/links rather than structured JSON. The raw_text was parsed into structured assets array for UI consumption.",
+  "timestamp": "2026-02-10T00:00:00Z"
+}

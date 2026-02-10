@@ -1,0 +1,137 @@
+{
+  "agent_name": "Content Writer Agent",
+  "agent_id": "698b3bc4530a77dfe1db90d6",
+  "agent_purpose": "Marketing copywriter that creates headlines, blog posts, social posts, and email content",
+  "description": "Content Writer Agent produces marketing copy including headlines, blog posts, social media posts for multiple platforms, and email content. Response follows {status, result: {summary, data: {headlines, blog_content, social_posts, email_content, brand_tone}}, metadata} format.",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "summary": "string",
+      "data": {
+        "headlines": [
+          "string"
+        ],
+        "blog_content": "string",
+        "social_posts": [
+          {
+            "platform": "string",
+            "content": "string"
+          }
+        ],
+        "email_content": {
+          "subject_lines": [
+            "string"
+          ],
+          "preview_text": "string",
+          "body_snippet": "string"
+        },
+        "brand_tone": "string"
+      }
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "summary": "Sample marketing copy demonstrating various content formats including headlines, blog content, social media posts, and email materials with a professional brand tone.",
+      "data": {
+        "headlines": [
+          "Transform Your Marketing Strategy: 5 Proven Tactics That Drive Results",
+          "Why Leading Brands Are Rethinking Their Approach to Customer Engagement",
+          "The Ultimate Guide to Building a Marketing Framework That Scales"
+        ],
+        "blog_content": "In today's rapidly evolving digital landscape, businesses face unprecedented challenges in capturing and maintaining customer attention. The traditional marketing playbook no longer delivers the results it once did, and forward-thinking organizations are adapting their strategies to meet modern consumer expectations.\n\nThe shift toward authentic, value-driven content has fundamentally changed how brands communicate with their audiences. Rather than relying solely on promotional messaging, successful companies now prioritize building genuine relationships through educational content, transparent communication, and personalized experiences.\n\nOne of the most significant trends reshaping marketing is the emphasis on data-driven decision making. By leveraging analytics and customer insights, brands can create highly targeted campaigns that resonate with specific audience segments. This precision approach not only improves conversion rates but also optimizes marketing spend by focusing resources on the most promising opportunities.\n\nAnother critical element is the integration of multiple channels into a cohesive customer journey. Today's consumers interact with brands across various touchpoints\u2014from social media and email to websites and mobile apps. Creating a seamless experience across these channels requires careful coordination and a deep understanding of how customers move through the buying process.\n\nThe most successful marketing strategies also incorporate agility and experimentation. Rather than committing to rigid annual plans, leading organizations embrace a test-and-learn methodology that allows them to quickly adapt to changing market conditions and capitalize on emerging opportunities.\n\nAs we look toward the future, the brands that will thrive are those that remain customer-centric, data-informed, and willing to evolve their approach based on real-world results.",
+        "social_posts": [
+          {
+            "platform": "LinkedIn",
+            "content": "The marketing landscape has changed dramatically. Here's what's working now:\n\n\u2705 Authentic, value-driven content\n\u2705 Data-driven personalization\n\u2705 Seamless multi-channel experiences\n\u2705 Agile, test-and-learn approaches\n\nWhich of these strategies has had the biggest impact on your business? Share your insights below. \ud83d\udc47\n\n#MarketingStrategy #DigitalMarketing #BusinessGrowth"
+          },
+          {
+            "platform": "Twitter/X",
+            "content": "Modern marketing isn't about shouting louder\u2014it's about creating genuine value.\n\nThe brands winning today:\n\u2192 Lead with data\n\u2192 Prioritize authenticity\n\u2192 Test and adapt quickly\n\nWhat's your take? \ud83d\ude80\n\n#Marketing #Growth"
+          },
+          {
+            "platform": "Instagram",
+            "content": "\ud83d\udcca Marketing that moves the needle in 2024:\n\n1\ufe0f\u20e3 Put customers first, always\n2\ufe0f\u20e3 Let data guide your decisions\n3\ufe0f\u20e3 Create seamless experiences\n4\ufe0f\u20e3 Stay agile and experiment\n\nWhich principle resonates most with you? Drop a number below! \ud83d\udc47\n\n#MarketingTips #BusinessStrategy #GrowthMindset"
+          },
+          {
+            "platform": "Facebook",
+            "content": "Struggling to get your marketing message heard? You're not alone.\n\nThe good news? There's a better way. Leading brands are moving away from pushy promotions and toward authentic, value-driven content that actually resonates with their audience.\n\nWant to learn the strategies that are working right now? Check out our latest guide (link in comments).\n\n\ud83d\udca1 What's your biggest marketing challenge right now? Let's discuss in the comments!"
+          },
+          {
+            "platform": "TikTok/Short-form",
+            "content": "POV: You're still using 2015 marketing tactics in 2024 \ud83d\ude2c\n\nHere's what actually works now:\n\u2728 Real connections > hard sells\n\ud83d\udcca Data-driven decisions > gut feelings\n\ud83d\udd04 Quick adaptation > rigid plans\n\nTime to level up your strategy! \ud83d\ude80\n\n#MarketingTips #BusinessGrowth #DigitalMarketing"
+          }
+        ],
+        "email_content": {
+          "subject_lines": [
+            "Your marketing strategy might be outdated\u2014here's how to fix it",
+            "5 data-backed tactics that transformed our clients' results"
+          ],
+          "preview_text": "Discover the proven strategies leading brands use to drive real engagement and conversions...",
+          "body_snippet": "Hi there,\n\nIf your marketing efforts aren't delivering the results you expected, you're not alone. The landscape has shifted dramatically, and what worked even two years ago may no longer be effective.\n\nWe've analyzed hundreds of successful campaigns and identified the key strategies that consistently drive results in today's environment. Inside this guide, you'll discover:\n\n\u2022 How to create content that genuinely resonates with your target audience\n\u2022 The data points you should be tracking (and which ones don't matter)\n\u2022 Proven frameworks for building multi-channel campaigns that convert\n\nReady to transform your approach? Let's dive in..."
+        },
+        "brand_tone": "Professional yet approachable, with clear value propositions and actionable insights"
+      }
+    },
+    "metadata": {
+      "agent_name": "Content Writer Agent",
+      "timestamp": "2025-01-13T10:30:00Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-02-10T14:18:22.586282",
+  "test_message_used": "Hello, provide a sample response",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "summary": "Sample marketing copy demonstrating various content formats including headlines, blog content, social media posts, and email materials with a professional brand tone.",
+      "data": {
+        "headlines": [
+          "Transform Your Marketing Strategy: 5 Proven Tactics That Drive Results",
+          "Why Leading Brands Are Rethinking Their Approach to Customer Engagement",
+          "The Ultimate Guide to Building a Marketing Framework That Scales"
+        ],
+        "blog_content": "In today's rapidly evolving digital landscape, businesses face unprecedented challenges in capturing and maintaining customer attention. The traditional marketing playbook no longer delivers the results it once did, and forward-thinking organizations are adapting their strategies to meet modern consumer expectations.\n\nThe shift toward authentic, value-driven content has fundamentally changed how brands communicate with their audiences. Rather than relying solely on promotional messaging, successful companies now prioritize building genuine relationships through educational content, transparent communication, and personalized experiences.\n\nOne of the most significant trends reshaping marketing is the emphasis on data-driven decision making. By leveraging analytics and customer insights, brands can create highly targeted campaigns that resonate with specific audience segments. This precision approach not only improves conversion rates but also optimizes marketing spend by focusing resources on the most promising opportunities.\n\nAnother critical element is the integration of multiple channels into a cohesive customer journey. Today's consumers interact with brands across various touchpoints\u2014from social media and email to websites and mobile apps. Creating a seamless experience across these channels requires careful coordination and a deep understanding of how customers move through the buying process.\n\nThe most successful marketing strategies also incorporate agility and experimentation. Rather than committing to rigid annual plans, leading organizations embrace a test-and-learn methodology that allows them to quickly adapt to changing market conditions and capitalize on emerging opportunities.\n\nAs we look toward the future, the brands that will thrive are those that remain customer-centric, data-informed, and willing to evolve their approach based on real-world results.",
+        "social_posts": [
+          {
+            "platform": "LinkedIn",
+            "content": "The marketing landscape has changed dramatically. Here's what's working now:\n\n\u2705 Authentic, value-driven content\n\u2705 Data-driven personalization\n\u2705 Seamless multi-channel experiences\n\u2705 Agile, test-and-learn approaches\n\nWhich of these strategies has had the biggest impact on your business? Share your insights below. \ud83d\udc47\n\n#MarketingStrategy #DigitalMarketing #BusinessGrowth"
+          },
+          {
+            "platform": "Twitter/X",
+            "content": "Modern marketing isn't about shouting louder\u2014it's about creating genuine value.\n\nThe brands winning today:\n\u2192 Lead with data\n\u2192 Prioritize authenticity\n\u2192 Test and adapt quickly\n\nWhat's your take? \ud83d\ude80\n\n#Marketing #Growth"
+          },
+          {
+            "platform": "Instagram",
+            "content": "\ud83d\udcca Marketing that moves the needle in 2024:\n\n1\ufe0f\u20e3 Put customers first, always\n2\ufe0f\u20e3 Let data guide your decisions\n3\ufe0f\u20e3 Create seamless experiences\n4\ufe0f\u20e3 Stay agile and experiment\n\nWhich principle resonates most with you? Drop a number below! \ud83d\udc47\n\n#MarketingTips #BusinessStrategy #GrowthMindset"
+          },
+          {
+            "platform": "Facebook",
+            "content": "Struggling to get your marketing message heard? You're not alone.\n\nThe good news? There's a better way. Leading brands are moving away from pushy promotions and toward authentic, value-driven content that actually resonates with their audience.\n\nWant to learn the strategies that are working right now? Check out our latest guide (link in comments).\n\n\ud83d\udca1 What's your biggest marketing challenge right now? Let's discuss in the comments!"
+          },
+          {
+            "platform": "TikTok/Short-form",
+            "content": "POV: You're still using 2015 marketing tactics in 2024 \ud83d\ude2c\n\nHere's what actually works now:\n\u2728 Real connections > hard sells\n\ud83d\udcca Data-driven decisions > gut feelings\n\ud83d\udd04 Quick adaptation > rigid plans\n\nTime to level up your strategy! \ud83d\ude80\n\n#MarketingTips #BusinessGrowth #DigitalMarketing"
+          }
+        ],
+        "email_content": {
+          "subject_lines": [
+            "Your marketing strategy might be outdated\u2014here's how to fix it",
+            "5 data-backed tactics that transformed our clients' results"
+          ],
+          "preview_text": "Discover the proven strategies leading brands use to drive real engagement and conversions...",
+          "body_snippet": "Hi there,\n\nIf your marketing efforts aren't delivering the results you expected, you're not alone. The landscape has shifted dramatically, and what worked even two years ago may no longer be effective.\n\nWe've analyzed hundreds of successful campaigns and identified the key strategies that consistently drive results in today's environment. Inside this guide, you'll discover:\n\n\u2022 How to create content that genuinely resonates with your target audience\n\u2022 The data points you should be tracking (and which ones don't matter)\n\u2022 Proven frameworks for building multi-channel campaigns that convert\n\nReady to transform your approach? Let's dive in..."
+        },
+        "brand_tone": "Professional yet approachable, with clear value propositions and actionable insights"
+      }
+    },
+    "metadata": {
+      "agent_name": "Content Writer Agent",
+      "timestamp": "2025-01-13T10:30:00Z"
+    }
+  }
+}

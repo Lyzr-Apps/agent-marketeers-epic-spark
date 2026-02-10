@@ -1,0 +1,79 @@
+{
+  "agent_name": "SEO Analyst Agent",
+  "agent_id": "698b3bf79b3205af189627aa",
+  "agent_purpose": "SEO strategist providing keyword recommendations, meta descriptions, and optimization guidance",
+  "description": "SEO Analyst Agent provides comprehensive SEO analysis including keyword recommendations (primary, secondary, long-tail), meta descriptions, optimization checklists, content structure, and linking strategies. Response follows {status, result: {summary, data: {primary_keywords, secondary_keywords, long_tail_keywords, meta_descriptions, optimization_checklist, content_structure, keyword_density_guidance, internal_linking_strategy}}, metadata} format.",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "summary": "string",
+      "data": {
+        "primary_keywords": [
+          "any"
+        ],
+        "secondary_keywords": [
+          "any"
+        ],
+        "long_tail_keywords": [
+          "any"
+        ],
+        "meta_descriptions": [
+          "any"
+        ],
+        "optimization_checklist": [
+          "any"
+        ],
+        "content_structure": "string",
+        "keyword_density_guidance": "string",
+        "internal_linking_strategy": "string"
+      }
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string"
+    }
+  },
+  "example_response": {
+    "status": "error",
+    "result": {
+      "summary": "Unable to fulfill the request for a sample response.",
+      "data": {
+        "primary_keywords": [],
+        "secondary_keywords": [],
+        "long_tail_keywords": [],
+        "meta_descriptions": [],
+        "optimization_checklist": [],
+        "content_structure": "",
+        "keyword_density_guidance": "",
+        "internal_linking_strategy": ""
+      }
+    },
+    "metadata": {
+      "agent_name": "SEO Analyst Agent",
+      "timestamp": "2023-10-04T12:00:00Z"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-02-10T14:18:25.840220",
+  "test_message_used": "Hello, provide a sample response",
+  "actual_test_response": {
+    "status": "error",
+    "result": {
+      "summary": "Unable to fulfill the request for a sample response.",
+      "data": {
+        "primary_keywords": [],
+        "secondary_keywords": [],
+        "long_tail_keywords": [],
+        "meta_descriptions": [],
+        "optimization_checklist": [],
+        "content_structure": "",
+        "keyword_density_guidance": "",
+        "internal_linking_strategy": ""
+      }
+    },
+    "metadata": {
+      "agent_name": "SEO Analyst Agent",
+      "timestamp": "2023-10-04T12:00:00Z"
+    }
+  }
+}

@@ -34,13 +34,16 @@ const AGENTS = [
   { id: GRAPHICS_GENERATOR_ID, name: 'Graphics Generator', role: 'Creates visual asset descriptions' },
 ]
 
-const ACTIVITY_STEPS = [
-  { label: 'Analyzing campaign brief...', agent: 'Marketing Coordinator', duration: 2000 },
-  { label: 'Researching keywords and SEO strategy...', agent: 'SEO Analyst', duration: 3000 },
-  { label: 'Drafting marketing copy and content...', agent: 'Content Writer', duration: 4000 },
-  { label: 'Generating visual asset concepts...', agent: 'Graphics Generator', duration: 3000 },
-  { label: 'Compiling and reviewing campaign...', agent: 'Marketing Coordinator', duration: 2000 },
-]
+// Agent ID to display name mapping
+const AGENT_NAME_MAP: Record<string, string> = {
+  [MANAGER_AGENT_ID]: 'Marketing Coordinator',
+  [CONTENT_WRITER_ID]: 'Content Writer',
+  [SEO_ANALYST_ID]: 'SEO Analyst',
+  [GRAPHICS_GENERATOR_ID]: 'Graphics Generator',
+}
+
+// WebSocket metrics URL
+const WS_METRICS_BASE = 'wss://metrics.studio.lyzr.ai/ws'
 
 const SAMPLE_BRIEF = {
   topic: "Create a complete marketing campaign for the launch of 'FlowState', a new productivity app for remote workers. Target audience: young professionals aged 25-35. Include SEO optimization, compelling copy, and visual assets.",
@@ -110,6 +113,15 @@ interface FormData {
   contentTypes: string[]
   targetAudience: string
   brandTone: string
+}
+
+interface ActivityEvent {
+  id: string
+  label: string
+  agent: string
+  agentId: string
+  status: 'active' | 'completed' | 'pending'
+  timestamp: number
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -294,26 +306,40 @@ function MarkdownRenderer({ content }: { content: string }) {
 
 // ─── Activity Stream ─────────────────────────────────────────────────────────
 
-function ActivityStream({ isActive, completedStep }: { isActive: boolean; completedStep: number }) {
-  if (!isActive && completedStep < 0) return null
+function ActivityStream({ isActive, events, wsConnected }: { isActive: boolean; events: ActivityEvent[]; wsConnected: boolean }) {
+  if (!isActive && events.length === 0) return null
 
   return (
     <Card className="mt-4 border-border/50 bg-card/80 backdrop-blur-md">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-semibold flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+          {isActive ? (
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+          ) : (
+            <div className="w-2 h-2 rounded-full bg-emerald-500" />
+          )}
           Agent Activity Stream
+          {isActive && (
+            <Badge variant="secondary" className="text-[10px] ml-auto px-1.5 py-0">
+              {wsConnected ? 'LIVE' : 'CONNECTING'}
+            </Badge>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="space-y-3">
-          {ACTIVITY_STEPS.map((step, idx) => {
-            const isCompleted = idx < completedStep
-            const isCurrent = idx === completedStep && isActive
-            const isPending = idx > completedStep
+          {events.length === 0 && isActive && (
+            <div className="flex items-center gap-3 py-2">
+              <FiLoader className="w-4 h-4 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">Connecting to agent activity stream...</p>
+            </div>
+          )}
+          {events.map((event, idx) => {
+            const isCompleted = event.status === 'completed'
+            const isCurrent = event.status === 'active'
 
             return (
-              <div key={idx} className="flex items-start gap-3">
+              <div key={event.id} className="flex items-start gap-3">
                 <div className="flex flex-col items-center">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-500 ${isCompleted ? 'bg-emerald-500 text-white' : isCurrent ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                     {isCompleted ? (
@@ -324,15 +350,15 @@ function ActivityStream({ isActive, completedStep }: { isActive: boolean; comple
                       <span className="text-xs">{idx + 1}</span>
                     )}
                   </div>
-                  {idx < ACTIVITY_STEPS.length - 1 && (
+                  {idx < events.length - 1 && (
                     <div className={`w-0.5 h-5 mt-1 transition-colors duration-500 ${isCompleted ? 'bg-emerald-500/50' : 'bg-border'}`} />
                   )}
                 </div>
-                <div className={`pt-1 transition-opacity duration-300 ${isPending ? 'opacity-40' : 'opacity-100'}`}>
+                <div className={`pt-1 transition-opacity duration-300 ${event.status === 'pending' ? 'opacity-40' : 'opacity-100'}`}>
                   <p className={`text-sm font-medium ${isCurrent ? 'text-foreground' : isCompleted ? 'text-muted-foreground' : 'text-muted-foreground/60'}`}>
-                    {step.label}
+                    {event.label}
                   </p>
-                  <p className="text-xs text-muted-foreground">{step.agent}</p>
+                  <p className="text-xs text-muted-foreground">{event.agent}</p>
                 </div>
               </div>
             )
@@ -453,7 +479,8 @@ export default function Home() {
 
   // App state
   const [isLoading, setIsLoading] = useState(false)
-  const [activityStep, setActivityStep] = useState(-1)
+  const [activityEvents, setActivityEvents] = useState<ActivityEvent[]>([])
+  const [wsConnected, setWsConnected] = useState(false)
   const [campaignResult, setCampaignResult] = useState<CampaignResult | null>(null)
   const [error, setError] = useState('')
   const [activeTab, setActiveTab] = useState('overview')
@@ -466,7 +493,9 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Refs
-  const activityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const wsRef = useRef<WebSocket | null>(null)
+  const activityEventsRef = useRef<ActivityEvent[]>([])
+  const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Load history from localStorage
   useEffect(() => {
@@ -520,20 +549,238 @@ export default function Home() {
     }))
   }, [])
 
-  // Simulate activity stream steps
-  const runActivityStream = useCallback(() => {
-    let step = 0
-    setActivityStep(0)
+  // Helper: add or update an activity event
+  const addActivityEvent = useCallback((event: ActivityEvent) => {
+    setActivityEvents(prev => {
+      // Mark any previous 'active' events for the same agent as completed
+      const updated = prev.map(e =>
+        e.status === 'active' && e.agentId === event.agentId && e.id !== event.id
+          ? { ...e, status: 'completed' as const }
+          : e
+      )
+      // Check if this event already exists (by id)
+      const existingIdx = updated.findIndex(e => e.id === event.id)
+      if (existingIdx >= 0) {
+        updated[existingIdx] = event
+        return updated
+      }
+      // If a new agent starts, mark all previously active events as completed
+      const withCompleted = updated.map(e =>
+        e.status === 'active' ? { ...e, status: 'completed' as const } : e
+      )
+      return [...withCompleted, event]
+    })
+  }, [])
 
-    const advance = () => {
-      step++
-      if (step < ACTIVITY_STEPS.length) {
-        setActivityStep(step)
-        activityTimerRef.current = setTimeout(advance, ACTIVITY_STEPS[step].duration)
+  // Helper: mark all active events as completed
+  const completeAllEvents = useCallback(() => {
+    setActivityEvents(prev => prev.map(e =>
+      e.status === 'active' ? { ...e, status: 'completed' as const } : e
+    ))
+  }, [])
+
+  // Cleanup WebSocket on unmount
+  useEffect(() => {
+    return () => {
+      if (wsRef.current) {
+        wsRef.current.close()
+        wsRef.current = null
+      }
+      if (fallbackTimerRef.current) {
+        clearTimeout(fallbackTimerRef.current)
       }
     }
-    activityTimerRef.current = setTimeout(advance, ACTIVITY_STEPS[0].duration)
   }, [])
+
+  // Resolve agent name from WebSocket message data
+  const resolveAgentName = useCallback((data: Record<string, unknown>): { name: string; id: string } => {
+    // Try to match agent_id from the message
+    const agentId = String(data?.agent_id || data?.agentId || '')
+    if (agentId && AGENT_NAME_MAP[agentId]) {
+      return { name: AGENT_NAME_MAP[agentId], id: agentId }
+    }
+
+    // Try matching by agent name in the message text
+    const msgText = String(data?.message || data?.text || data?.content || data?.agent_name || data?.agentName || '').toLowerCase()
+    for (const [id, name] of Object.entries(AGENT_NAME_MAP)) {
+      if (msgText.includes(name.toLowerCase())) {
+        return { name, id }
+      }
+    }
+
+    // Try matching keywords to identify the agent
+    if (msgText.includes('seo') || msgText.includes('keyword')) {
+      return { name: 'SEO Analyst', id: SEO_ANALYST_ID }
+    }
+    if (msgText.includes('content') || msgText.includes('copy') || msgText.includes('writing') || msgText.includes('blog')) {
+      return { name: 'Content Writer', id: CONTENT_WRITER_ID }
+    }
+    if (msgText.includes('graphic') || msgText.includes('visual') || msgText.includes('image') || msgText.includes('design')) {
+      return { name: 'Graphics Generator', id: GRAPHICS_GENERATOR_ID }
+    }
+    if (msgText.includes('coordinat') || msgText.includes('manag') || msgText.includes('orchestrat') || msgText.includes('campaign')) {
+      return { name: 'Marketing Coordinator', id: MANAGER_AGENT_ID }
+    }
+
+    // Default to manager
+    return { name: 'Marketing Coordinator', id: MANAGER_AGENT_ID }
+  }, [])
+
+  // Connect to WebSocket and start activity stream
+  const connectActivityStream = useCallback(async (sessionId: string): Promise<void> => {
+    // Fetch API key from server
+    let apiKey = ''
+    try {
+      const configRes = await fetch('/api/lyzr-config')
+      const configData = await configRes.json()
+      if (configData.success && configData.apiKey) {
+        apiKey = configData.apiKey
+      }
+    } catch {
+      // If we can't get the API key, fall back to simulated stream
+    }
+
+    if (!apiKey) {
+      // Fallback: run a simulated stream if no API key available
+      runFallbackStream()
+      return
+    }
+
+    // Close any existing WebSocket
+    if (wsRef.current) {
+      wsRef.current.close()
+    }
+
+    const wsUrl = `${WS_METRICS_BASE}/${sessionId}?x-api-key=${apiKey}`
+
+    try {
+      const ws = new WebSocket(wsUrl)
+      wsRef.current = ws
+      let eventCounter = 0
+
+      // Add initial "starting" event
+      addActivityEvent({
+        id: `evt-init-${Date.now()}`,
+        label: 'Initializing campaign orchestration...',
+        agent: 'Marketing Coordinator',
+        agentId: MANAGER_AGENT_ID,
+        status: 'active',
+        timestamp: Date.now(),
+      })
+
+      ws.onopen = () => {
+        setWsConnected(true)
+      }
+
+      ws.onmessage = (event) => {
+        try {
+          const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
+          const { name: agentName, id: agentId } = resolveAgentName(data)
+
+          // Determine the activity label from the message
+          let label = String(data?.message || data?.text || data?.content || data?.status || '')
+          if (!label || label === 'undefined') {
+            // Generate a descriptive label based on agent type
+            if (data?.type === 'start' || data?.event === 'start') {
+              label = `${agentName} starting task...`
+            } else if (data?.type === 'complete' || data?.event === 'complete' || data?.type === 'done') {
+              label = `${agentName} completed task`
+            } else if (data?.type === 'thinking' || data?.event === 'thinking') {
+              label = `${agentName} analyzing...`
+            } else {
+              label = `${agentName} processing...`
+            }
+          }
+
+          // Determine status
+          let status: 'active' | 'completed' = 'active'
+          if (data?.type === 'complete' || data?.event === 'complete' || data?.type === 'done' || data?.status === 'completed') {
+            status = 'completed'
+          }
+
+          eventCounter++
+          const eventId = `evt-${eventCounter}-${Date.now()}`
+
+          addActivityEvent({
+            id: eventId,
+            label,
+            agent: agentName,
+            agentId,
+            status,
+            timestamp: Date.now(),
+          })
+
+          // Update the active agent indicator
+          setActiveAgentId(status === 'active' ? agentId : null)
+        } catch {
+          // If message can't be parsed as JSON, treat as text
+          const text = String(event.data)
+          if (text.trim()) {
+            eventCounter++
+            addActivityEvent({
+              id: `evt-text-${eventCounter}-${Date.now()}`,
+              label: text.length > 100 ? text.slice(0, 100) + '...' : text,
+              agent: 'Marketing Coordinator',
+              agentId: MANAGER_AGENT_ID,
+              status: 'active',
+              timestamp: Date.now(),
+            })
+          }
+        }
+      }
+
+      ws.onerror = () => {
+        // On WebSocket error, fall back to simulated stream
+        setWsConnected(false)
+        runFallbackStream()
+      }
+
+      ws.onclose = () => {
+        setWsConnected(false)
+        wsRef.current = null
+      }
+
+      // Set a fallback timeout: if no WS messages after 8 seconds, start fallback
+      fallbackTimerRef.current = setTimeout(() => {
+        if (activityEventsRef.current.length <= 1) {
+          // No real events received beyond the initial one, use fallback
+          runFallbackStream()
+        }
+      }, 8000)
+    } catch {
+      runFallbackStream()
+    }
+  }, [addActivityEvent, resolveAgentName])
+
+  // Keep ref in sync with state for timeout checks
+  useEffect(() => {
+    activityEventsRef.current = activityEvents
+  }, [activityEvents])
+
+  // Fallback simulated activity stream (used if WebSocket unavailable)
+  const runFallbackStream = useCallback(() => {
+    const steps = [
+      { label: 'Analyzing campaign brief...', agent: 'Marketing Coordinator', agentId: MANAGER_AGENT_ID, delay: 0 },
+      { label: 'Researching keywords and SEO strategy...', agent: 'SEO Analyst', agentId: SEO_ANALYST_ID, delay: 3000 },
+      { label: 'Drafting marketing copy and content...', agent: 'Content Writer', agentId: CONTENT_WRITER_ID, delay: 7000 },
+      { label: 'Generating visual asset concepts...', agent: 'Graphics Generator', agentId: GRAPHICS_GENERATOR_ID, delay: 12000 },
+      { label: 'Compiling and reviewing campaign...', agent: 'Marketing Coordinator', agentId: MANAGER_AGENT_ID, delay: 16000 },
+    ]
+
+    steps.forEach((step, idx) => {
+      setTimeout(() => {
+        addActivityEvent({
+          id: `fallback-${idx}-${Date.now()}`,
+          label: step.label,
+          agent: step.agent,
+          agentId: step.agentId,
+          status: 'active',
+          timestamp: Date.now(),
+        })
+        setActiveAgentId(step.agentId)
+      }, step.delay)
+    })
+  }, [addActivityEvent])
 
   // Generate campaign
   const handleGenerate = useCallback(async () => {
@@ -545,19 +792,26 @@ export default function Home() {
     setError('')
     setIsLoading(true)
     setCampaignResult(null)
+    setActivityEvents([])
     setActiveAgentId(MANAGER_AGENT_ID)
-    runActivityStream()
+
+    // Generate a session_id to share between the API call and WebSocket
+    const sessionId = `${MANAGER_AGENT_ID}-${generateId()}`
+
+    // Start the WebSocket activity stream BEFORE making the API call
+    connectActivityStream(sessionId)
 
     const prompt = `Campaign Topic: ${formData.topic}\nContent Types: ${formData.contentTypes.length > 0 ? formData.contentTypes.join(', ') : 'blog post, social media'}\nTarget Audience: ${formData.targetAudience || 'General audience'}\nBrand Tone: ${formData.brandTone || 'professional'}`
 
     try {
-      const apiResult = await callAIAgent(prompt, MANAGER_AGENT_ID)
+      // Pass the same session_id to the API call so WebSocket gets the right events
+      const apiResult = await callAIAgent(prompt, MANAGER_AGENT_ID, { session_id: sessionId })
       const parsed = parseManagerResponse(apiResult as { success: boolean; response?: Record<string, unknown> })
 
       if (parsed) {
         setCampaignResult(parsed)
         setActiveTab('overview')
-        setActivityStep(ACTIVITY_STEPS.length)
+        completeAllEvents()
 
         const now = new Date()
         const timestamp = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`
@@ -578,18 +832,24 @@ export default function Home() {
     } finally {
       setIsLoading(false)
       setActiveAgentId(null)
-      if (activityTimerRef.current) {
-        clearTimeout(activityTimerRef.current)
+      completeAllEvents()
+      // Close WebSocket
+      if (wsRef.current) {
+        wsRef.current.close()
+        wsRef.current = null
+      }
+      if (fallbackTimerRef.current) {
+        clearTimeout(fallbackTimerRef.current)
       }
     }
-  }, [formData, history, runActivityStream, saveHistory])
+  }, [formData, history, connectActivityStream, completeAllEvents, saveHistory])
 
   // Reset form
   const handleNewCampaign = useCallback(() => {
     setFormData({ topic: '', contentTypes: [], targetAudience: '', brandTone: 'professional' })
     setCampaignResult(null)
     setError('')
-    setActivityStep(-1)
+    setActivityEvents([])
     setShowSampleData(false)
   }, [])
 
@@ -784,7 +1044,7 @@ export default function Home() {
             </Card>
 
             {/* Activity Stream */}
-            <ActivityStream isActive={isLoading} completedStep={activityStep} />
+            <ActivityStream isActive={isLoading} events={activityEvents} wsConnected={wsConnected} />
 
             {/* Agent Info */}
             <Card className="border-border/50 bg-card/80 backdrop-blur-md">

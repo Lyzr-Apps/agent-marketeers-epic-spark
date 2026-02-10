@@ -130,25 +130,105 @@ function generateId(): string {
   return Array.from({ length: 12 }, () => Math.floor(Math.random() * 36).toString(36)).join('')
 }
 
-function parseManagerResponse(apiResponse: { success: boolean; response?: Record<string, unknown> }): CampaignResult | null {
+function parseManagerResponse(apiResponse: Record<string, unknown>): CampaignResult | null {
   if (!apiResponse?.success) return null
-  const resp = apiResponse?.response as Record<string, unknown> | undefined
-  if (!resp) return null
 
-  const result = resp?.result as Record<string, unknown> | undefined
-  if (!result) return null
+  const CAMPAIGN_KEYS = ['campaign_overview', 'written_content', 'seo_recommendations', 'visual_assets', 'consistency_notes', 'revision_flags'] as const
 
-  const data = (result?.data as Record<string, unknown>) || result
+  // Try to extract campaign fields from an object at any depth
+  function findCampaignFields(obj: unknown): CampaignResult | null {
+    if (!obj || typeof obj !== 'object') return null
+    const o = obj as Record<string, unknown>
 
-  return {
-    summary: String(result?.summary ?? data?.summary ?? ''),
-    campaign_overview: String(data?.campaign_overview ?? ''),
-    written_content: String(data?.written_content ?? ''),
-    seo_recommendations: String(data?.seo_recommendations ?? ''),
-    visual_assets: String(data?.visual_assets ?? ''),
-    consistency_notes: String(data?.consistency_notes ?? ''),
-    revision_flags: String(data?.revision_flags ?? ''),
+    // Check if this object directly has campaign keys
+    const hasKeys = CAMPAIGN_KEYS.some(k => typeof o[k] === 'string' && (o[k] as string).length > 0)
+    if (hasKeys) {
+      return {
+        summary: String(o.summary ?? ''),
+        campaign_overview: String(o.campaign_overview ?? ''),
+        written_content: String(o.written_content ?? ''),
+        seo_recommendations: String(o.seo_recommendations ?? ''),
+        visual_assets: String(o.visual_assets ?? ''),
+        consistency_notes: String(o.consistency_notes ?? ''),
+        revision_flags: String(o.revision_flags ?? ''),
+      }
+    }
+    return null
   }
+
+  // Try to parse a string value as JSON and look for campaign fields inside
+  function tryParseAndFind(val: unknown): CampaignResult | null {
+    if (typeof val !== 'string' || val.length < 10) return null
+    try {
+      const parsed = JSON.parse(val)
+      return deepSearch(parsed)
+    } catch {
+      // Try to find JSON within the string
+      const jsonMatch = val.match(/\{[\s\S]*\}/)
+      if (jsonMatch) {
+        try {
+          const parsed = JSON.parse(jsonMatch[0])
+          return deepSearch(parsed)
+        } catch {
+          return null
+        }
+      }
+      return null
+    }
+  }
+
+  // Recursively search through object hierarchy for campaign fields
+  function deepSearch(obj: unknown, depth: number = 0): CampaignResult | null {
+    if (depth > 8 || !obj || typeof obj !== 'object') return null
+    const o = obj as Record<string, unknown>
+
+    // Direct check
+    const direct = findCampaignFields(o)
+    if (direct) return direct
+
+    // Check nested objects under common keys
+    const searchKeys = ['data', 'result', 'response', 'content', 'output', 'message', 'text']
+    for (const key of searchKeys) {
+      if (o[key]) {
+        if (typeof o[key] === 'object') {
+          const found = deepSearch(o[key], depth + 1)
+          if (found) {
+            // Capture summary from parent if the nested object didn't have it
+            if (!found.summary && typeof o.summary === 'string') {
+              found.summary = o.summary
+            }
+            return found
+          }
+        }
+        // Try parsing string values as JSON
+        const fromStr = tryParseAndFind(o[key])
+        if (fromStr) {
+          if (!fromStr.summary && typeof o.summary === 'string') {
+            fromStr.summary = o.summary
+          }
+          return fromStr
+        }
+      }
+    }
+
+    return null
+  }
+
+  // 1. Search through the normalized response object
+  const resp = apiResponse?.response
+  const found = deepSearch(resp)
+  if (found) return found
+
+  // 2. Search the top-level apiResponse itself
+  const topLevel = deepSearch(apiResponse)
+  if (topLevel) return topLevel
+
+  // 3. Try raw_response as final fallback
+  const rawResp = apiResponse?.raw_response
+  const fromRaw = tryParseAndFind(rawResp)
+  if (fromRaw) return fromRaw
+
+  return null
 }
 
 function parseVisualAssets(text: string): { name: string; intended_use: string; specifications: string }[] {
@@ -806,7 +886,7 @@ export default function Home() {
     try {
       // Pass the same session_id to the API call so WebSocket gets the right events
       const apiResult = await callAIAgent(prompt, MANAGER_AGENT_ID, { session_id: sessionId })
-      const parsed = parseManagerResponse(apiResult as { success: boolean; response?: Record<string, unknown> })
+      const parsed = parseManagerResponse(apiResult as Record<string, unknown>)
 
       if (parsed) {
         setCampaignResult(parsed)
